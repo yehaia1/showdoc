@@ -55,13 +55,31 @@
             </el-select>
         </el-form-item>
 
-        
+
         <el-form-item label="ldap user filed">
           <el-input v-model="form.ldap_form.user_field" class="form-el" placeholder="例如 cn"></el-input>
         </el-form-item>
-       
+
       </div>
 
+      <!-- 上传配置 -->
+      <el-form-item :label="$t('upload_setting')">
+        <el-switch v-model="form.upload_setting"></el-switch>
+      </el-form-item>
+      <div v-if="form.upload_setting" style="margin-left:50px" >
+        <el-form-item :label="$t('file_maxSize')">
+          <el-input v-model="form.uploadFile_maxSize"  style="width:80px"></el-input>
+          M
+        </el-form-item>
+        <el-form-item :label="$t('img_maxSize')">
+          <el-input v-model="form.uploadImg_maxSize"  style="width:80px"></el-input>
+          M
+        </el-form-item>
+        <el-alert :title="$t('upload_setting_tips')" style="width:25%" type="warning">
+
+        </el-alert>
+      </div>
+      <div style="height:20px"></div>
 
 
       <el-form-item >
@@ -98,7 +116,10 @@ export default {
           "bind_dn":'',
           "bind_password":'',
           "user_field":'',
-        }
+        },
+        upload_setting:false,
+        uploadFile_maxSize:'',
+        uploadImg_maxSize:'',
       }
     };
   },
@@ -113,7 +134,7 @@ export default {
           }else{
             this.$alert(response.data.error_message);
           }
-          
+
         });
     },
     loadConfig(){
@@ -130,13 +151,31 @@ export default {
           }else{
             this.$alert(response.data.error_message);
           }
-          
+
+        });
+    },
+    loadUploadConfig(){
+      var url = DocConfig.server+'/api/adminSetting/getUploadSetting';
+      this.axios.post(url, this.form)
+        .then( (response) =>{
+          if (response.data.error_code === 0 ) {
+            if (response.data.data.length === 0) {
+              return ;
+            };
+            this.form.upload_setting = response.data.data.upload_state > 0 ? true : false;
+            this.form.uploadFile_maxSize = response.data.data.uploadFile_maxSize;
+            this.form.uploadImg_maxSize = response.data.data.uploadImg_maxSize;
+          }else{
+            this.$alert(response.data.error_message);
+          }
+
         });
     }
 
   },
   mounted () {
     this.loadConfig();
+    this.loadUploadConfig();
   },
   beforeDestroy(){
     this.$message.closeAll();

@@ -248,7 +248,7 @@ exports.default = {
 
     "copy_link":"复制链接",
     "copy_success":"复制成功",
-    
+
     "user_manage":"用户管理",
     "item_manage":"项目管理",
     "web_setting":"站点设置",
@@ -263,8 +263,12 @@ exports.default = {
     "upload_file":"上传文件",
     "file_name":"文件名",
     "download":"下载",
-    "file_size_tips":"文件大小在4M内",
-    
+    "file_size_tips":"文件大小不能大于",
+    "upload_setting":"开启上传设置",
+    "file_maxSize":"允许文件大小",
+    "img_maxSize":"允许图片大小",
+    "upload_setting_tips":"请自行修改nginx或者apache的可上传文件大小",
+
     "confirm_cat_delete" :"确认删除目录吗？此操作会把该目录下的所有页面一并删除，请谨慎操作。",
 
     "userrole":"用户角色",
@@ -280,5 +284,5 @@ exports.default = {
     "register_open":"开放用户注册",
     "long_page_tips":"检测到本页面内容比较多，showdoc暂时关闭了html实时预览功能，以防止过多内容造成页面卡顿。你可以在编辑栏中找到预览按钮进行手动打开。",
 
-    
+
 };

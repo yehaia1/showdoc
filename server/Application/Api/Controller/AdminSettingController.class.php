@@ -10,8 +10,11 @@ class AdminSettingController extends BaseController {
         $register_open = intval(I("register_open")) ;
         $ldap_open = intval(I("ldap_open")) ;
         $ldap_form = I("ldap_form") ;
+        $upload_setting_open = intval(I("upload_setting"));
+        $uploadFile_maxSize = intval(I("uploadFile_maxSize"))*(1024*1024);
+        $uploadImg_maxSize = intval(I("uploadImg_maxSize"))*(1024*1024);
         D("Options")->set("register_open" ,$register_open) ;
-        
+
 
         if ($ldap_open) {
             if (!$ldap_form['user_field']) {
@@ -28,7 +31,7 @@ class AdminSettingController extends BaseController {
                return ;
             }
             ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_form['version']);
-            $rs=ldap_bind($ldap_conn, $ldap_form['bind_dn'], $ldap_form['bind_password']);//与服务器绑定 用户登录验证 成功返回1 
+            $rs=ldap_bind($ldap_conn, $ldap_form['bind_dn'], $ldap_form['bind_password']);//与服务器绑定 用户登录验证 成功返回1
             if (!$rs) {
                $this->sendError(10011,"Can't bind to LDAP server");
                return ;
@@ -36,7 +39,7 @@ class AdminSettingController extends BaseController {
 
             $result = ldap_search($ldap_conn,$ldap_form['base_dn'],"(cn=*)");
             $data = ldap_get_entries($ldap_conn, $result);
-            
+
             for ($i=0; $i<$data["count"]; $i++) {
                 $ldap_user = $data[$i][$ldap_form['user_field']][0] ;
                 if (!$ldap_user) {
@@ -50,6 +53,16 @@ class AdminSettingController extends BaseController {
             D("Options")->set("ldap_form" , json_encode( $ldap_form)) ;
         }
         D("Options")->set("ldap_open" ,$ldap_open) ;
+        //开启上传配置时把数据保存到数据库
+        D("Options")->set("upload_setting_open" ,$upload_setting_open) ;
+        if ($upload_setting_open) {
+            if($uploadFile_maxSize){
+                D("Options")->set("uploadFile_maxSize" ,$uploadFile_maxSize) ;
+            }
+            if ($uploadImg_maxSize) {
+                D("Options")->set("uploadImg_maxSize" ,$uploadImg_maxSize) ;
+            }
+        }
         $this->sendResult(array());
 
     }
@@ -95,7 +108,7 @@ class AdminSettingController extends BaseController {
                return ;
             }
             ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_form['version']);
-            $rs=ldap_bind($ldap_conn, $ldap_form['bind_dn'], $ldap_form['bind_password']);//与服务器绑定 用户登录验证 成功返回1 
+            $rs=ldap_bind($ldap_conn, $ldap_form['bind_dn'], $ldap_form['bind_password']);//与服务器绑定 用户登录验证 成功返回1
             if (!$rs) {
                $this->sendError(10011,"Can't bind to LDAP server");
                return ;
@@ -123,4 +136,16 @@ class AdminSettingController extends BaseController {
            $this->sendError(10011,"用户名或者密码错误");
     }
 
+    // 获取上传配置
+    public function getUploadSetting(){
+        $upload_state = D("Options")->get("upload_setting_open") ? D("Options")->get("upload_setting_open") : C('UPLOAD_SETTING')['state'];
+        $uploadFile_maxSize = (D("Options")->get("upload_setting_open") > 0 && D("Options")->get("uploadFile_maxSize") ? D("Options")->get("uploadFile_maxSize") : C('UPLOAD_SETTING')['file'])/(1024*1024);
+        $uploadImg_maxSize = (D("Options")->get("upload_setting_open") > 0 && D("Options")->get("uploadImg_maxSize") ? D("Options")->get("uploadImg_maxSize") : C('UPLOAD_SETTING')['img'])/(1024*1024);
+        $array = array(
+            "upload_state"=>$upload_state,
+            "uploadFile_maxSize"=>$uploadFile_maxSize,
+            "uploadImg_maxSize"=>$uploadImg_maxSize
+        );
+        $this->sendResult($array);
+    }
 }

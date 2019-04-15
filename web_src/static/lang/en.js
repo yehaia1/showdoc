@@ -257,8 +257,12 @@ exports.default = {
     "upload_file":"Upload file",
     "file_name":"File name",
     "download":"Download",
-    "file_size_tips":"Less than 4MB",
-    
+    "file_size_tips":"less than ",
+    "upload_setting":"open upload setting",
+    "file_maxSize":"file max size",
+    "img_maxSize":"image max size",
+    "upload_setting_tips":"please changes your upload file size for nginx or apache",
+
     "confirm_cat_delete" :"Are you sure you want to delete the directory? This action will delete all the pages in this directory. Please be careful.",
 
     "userrole":"User role",
@@ -274,5 +278,5 @@ exports.default = {
     "register_open":"Open registration",
     "long_page_tips":'The content of this page was detected to be more, and showdoc temporarily shut down the HTML real-time preview function to prevent the page from getting stuck due to too much content. You can find the preview button in the edit bar and open it manually.',
 
-    
+
 };

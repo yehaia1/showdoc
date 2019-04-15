@@ -18,9 +18,9 @@
           <el-button size="small" type="primary">{{$t('upload_file')}}</el-button><small>&nbsp;&nbsp;&nbsp;{{$t('file_size_tips')+uploadFile_maxSize+'M'}}</small>
         </el-upload>
 
-        <el-table :data="content">
-          <el-table-column property="addtime" :label="$t('add_time')" width="170"></el-table-column>
-          <el-table-column property="display_name" :label="$t('file_name')" ></el-table-column>
+        <el-table :data="content" :default-sort = "{prop: 'addtime', order: 'descending'}">
+          <el-table-column sortable property="addtime" :label="$t('add_time')" width="170"></el-table-column>
+          <el-table-column sortable property="display_name" :label="$t('file_name')" ></el-table-column>
           <el-table-column
             :label="$t('operation')"
             width="150">
@@ -109,8 +109,7 @@ export default {
 
     },
     downloadFile(row){
-      var url  = row.url ;
-      window.open(url);
+      this.download(row.url,row.display_name)
     },
 
     deleteFile(row){
